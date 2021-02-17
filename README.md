@@ -1,4 +1,4 @@
-# UNIX Assignment template
+# UNIX Assignment - Dua Vang
 
 Your UNIX assignment will consist of two components:
 
