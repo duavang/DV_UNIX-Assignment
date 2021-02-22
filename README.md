@@ -392,6 +392,6 @@ Final step - save, commit, and push files to Git repository:
 
 ```
 $ git add . 
-$ git commit -m “<descriptiom of change>”
+$ git commit -m “update"
 $ git push 
 ```
