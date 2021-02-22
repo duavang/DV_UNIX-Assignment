@@ -92,7 +92,6 @@ By inspecting this file I learned that:
 	```
 	$ cut -f -1,3,4 snp_position.txt > snp_pos_chrom.txt
 	$ head -n5 snp_pos_chrom.txt
-	
 	```
 * b. Sort snp_position.txt alpha-numerically in column 1: 
 	
@@ -115,19 +114,16 @@ By inspecting this file I learned that:
 
 	```
 	$ awk 'NR==1; $3 ~ /ZMMIL|ZMMLR|ZMMMR/' fang_et_al_genotypes.txt > maize_genotypes.txt
-	
 	```
+	
 	*```NR==1``` is used to ensure that the header is retained in the output file. 
 
 * b. Use ```cut```, ```head```, and ```awk``` to double check that maize_genotypes.txt only has the 3 maize groups I want, along with all of the other data associated with each of them. 
 
 	```
 	$ cut -f3 maize_genotypes.txt |sort| uniq -c 
-	
 	$ head -n5 maize_genotypes.txt
-	
 	$ awk -F "\t" '{print NF; exit}' maize_genotypes.txt
-	
 	```
 	```
 	output: 	     
@@ -140,8 +136,9 @@ By inspecting this file I learned that:
 
 * c. Transpose maize_genotypes.txt:
 
+	
 	```
-$ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
+	$ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 	
 	```
 	
@@ -174,6 +171,7 @@ $ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 	$ head -n 5 maizejoined.txt
 	$ awk -F "\t" '{print NF; exit}' maizejoined.txt
 	```	
+	
 	```
 	output:  
 		
@@ -193,7 +191,6 @@ $ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 
 	```
 	$ awk 'NR==1; $3 ~ /ZMPBA|ZMPIL|ZMPJA/' fang_et_al_genotypes.txt > teosinte_genotypes.txt
-	
 	```
 	
 	* ```NR==1``` is used to ensure that the header is retained in the output file. 
@@ -202,9 +199,7 @@ $ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 
 	``` 
 	$cut -f3 teosinte_genotypes.txt |sort| uniq -c 
-	
 	$ head -n5 teosinte_genotypes.txt
-	
 	$ awk -F "\t" '{print NF; exit}' teosinte_genotypes.txt
 	
 	```
@@ -228,7 +223,6 @@ $ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 
 	```
 	$ (head -n1 transposed_teosinte_genotypes.txt && tail -n +2 transposed_teosinte_genotypes.txt | sort -f -k1,1) > transposed_teosinte_genotypes_sorted.txt
-	
 	```	
 	
 * e. To ensure that we still have the header along with the rest of the data, run ```head -n5```: 
@@ -245,6 +239,7 @@ $ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 	```
 	$ join -t $'\t' -a1 -1 1 -2 1 snp_pos_chrom_sorted.txt transposed_teosinte_genotypes_sorted.txt > teosintejoined.txt
 	```
+	
 * g. Checking to make sure our join was successful using ```wc -1```, ```head -n5``` and ```awk```:
 	
 	```
@@ -252,17 +247,17 @@ $ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
 	$ head -n 5 teosintejoined.txt
 	$ awk -F "\t" '{print NF; exit}' teosintejoined.txt
 	```	
+	
 	```
 	output:  
-	
-     
+
 	984 snp_ pos_ chrom_ sorted.txt_      
     986  transposed_ teosinte_ genotypes_sorted.txt     
     984  teosintejoined.txt
     2954 total
     
     3 columns
-```
+	```
 
 
 ##Data Processing: Maize Data Codes and Analysis for the following tasks
@@ -274,30 +269,23 @@ For maize (Group = ZMMIL, ZMMLR, and ZMMMR in the third column of the fang_et _a
 
 	```
 	$ cut -f2 maizejoined.txt |sort| uniq -c 
-	
 	$ cut -f3 maizejoined.txt |sort| uniq -c 
-	
 	```
-According to the output, we have 115 groups in chromosome 1, 127 groups in chromosome 2, 107 groups in chromosome 3, 91 groups in chromosome 4, 122 groups in chromosome 5, 76 groups in chromosome 6, 97 groups in chromosome 7, 62 groups in chromosome 8, 60 groups in chromosome 9, and 53 groups in chromosome 10.
-
-	Additionally, we have 11 groups that are in multiple and 27 groups that are unknown. 
 	
 * b. Next, we have to use ```awk``` and ```sort```  to cut and sort each chromosome by increasing position values and with missing data encoded by this symbol: ? using ```sed```: 
 
 	```
 	$ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3n) | sed 's/-/?/g' > chr"$i"_maize_genotypes.txt; done
-	
 	$ head -n2 chr1__maize_genotypes.txt
-	$ tail -n2 chr1__maize_genotypes.txt
-	
+	$ tail -n2 chr1__maize_genotypes.txt	
 	```
+	
 *i* is our variable for column 2. For every i (1-10), it will print our header, sort numerically in column 3 (except for the header), and then match any missing data with "?" 
 
 **2) 10 files (1 for each chromosome) with SNPs ordered based on decreasing position values and with missing data encoded by this symbol: -**
 
 ```
 $ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3nr) | sed 's/?/-/g' > chr"$i"_maize_genotypes_reverse.txt; done
-
 $ head -n2 chr1__maize_genotypes_reverse.txt
 $ tail -n2 chr1__maize_genotypes_reverse.txt
 ```
@@ -308,16 +296,14 @@ $ tail -n2 chr1__maize_genotypes_reverse.txt
 $ awk 'NR==1; $3 ~ /unknown/' maizejoined.txt > maize_unknown_genotypes.txt
 	
 $ cut -f3 maize_unknown_genotypes.txt |sort| uniq -c
-
 ```
 
 **4) 1 file with all SNPs with multiple positions in the genome (these need not be ordered in any particular way)**
 
+
 ```
 $ awk 'NR==1; $3 ~ /multiple/' maizejoined.txt > maize_multiple_genotypes.txt
-
 $ cut -f3 maize_multiple_genotypes.txt |sort| uniq -c
-
 ```
 
 
@@ -330,12 +316,10 @@ For teosinte (Group = ZMPBA, ZMPIL, and ZMPJA in the third column of the fang_et
 * a. First, we need to determine how many groups are in each chromosome and how many snps we have that are unknown and multiple positions of the genome: 
 
 
-```
-$ cut -f2 teosintejoined.txt |sort| uniq -c 
-	
-$ cut -f3 teosintejoined.txt |sort| uniq -c 
-
-```
+	```
+	$ cut -f2 teosintejoined.txt |sort| uniq -c 
+	$ cut -f3 teosintejoined.txt |sort| uniq -c 
+	```
 
 * b. Next, we have to use ```awk``` and ```sort```  to cut and sort each chromosome by increasing position values and with missing data encoded by this symbol: ? using ```sed```: 
 
@@ -353,7 +337,6 @@ $ cut -f3 teosintejoined.txt |sort| uniq -c
 
 ```
 $ for i in {1..10}; awk 'NR==1; $2=='$i'' teosintejoined.txt | (head -n1 && tail -n +2 | sort -k3,3nr) | sed 's/?/-/g' > chr"$i"_teosinte_genotypes_reverse.txt 
-
 $ head -n2 chr1_teosinte_genotypes_reverse.txt
 $ tail -n2 chr1_teosinte_genotypes_reverse.txt
 ```
@@ -361,26 +344,22 @@ $ tail -n2 chr1_teosinte_genotypes_reverse.txt
 **3) 1 file with all SNPs with unknown positions in the genome (these need not be ordered in any particular way)**
 
 ```
-$ awk 'NR==1; $3 ~ /unknown/' teosintejoined.txt  > teosinte_unknown_genotypes.txt
-	
+$ awk 'NR==1; $3 ~ /unknown/' teosintejoined.txt  > teosinte_unknown_genotypes.txt	
 $ cut -f3 teosinte_unknown_genotypes.txt |sort| uniq -c
-
 $ head -n2 teosinte_unknown_genotypes.txt
-
 ```
 
 **4) 1 file with all SNPs with multiple positions in the genome (these need not be ordered in any particular way)**
 
 ```
 $ awk 'NR==1; $3 ~ /multiple/' teosintejoined.txt  > teosinte_mulitple_genotypes.txt
-
 $ cut -f3 teosinte_mulitple_genotypes.txt|sort| uniq -c
-
 $ head -n2 teosinte_mulitple_genotypes.txt
-
 ```
 
-Clean up and organize all of the files into their respective folders" 
+
+**5) Clean filed and organize into their respective folders:**
+
 
 ```
 $ mkdir all_maize_genotypes
@@ -388,7 +367,7 @@ $ mkdir all_teosinte_genotypes
 $ mkdir intermed_files
 ```
 
-Final step - save, commit, and push files to Git repository: 
+**6) Final step - save, commit, and push files to Git repository:** 
 
 ```
 $ git add . 
