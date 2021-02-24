@@ -343,6 +343,8 @@ $ head -n2 teosinte_mulitple_genotypes.txt
 ```
 
 ##Data clean-up
+
+
 **1) Clean filed and organize into their respective folders:**
 
 
