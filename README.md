@@ -1,4 +1,4 @@
-#UNIX Assignment Submission- Dua Vang 02/17/21
+#UNIX Assignment Submission- Dua Vang 
 
 ##Data Inspection
 
@@ -176,7 +176,7 @@ By inspecting this file I learned that:
 	output:  
 		
 	     
-	984  cut_snp_position_sorted.txt
+	984  snp_pos_chrom_sorted.txt
     986  transposed_maizegeno_header_sorted.txt
     984  maizejoined.txt  
     2954  total
@@ -198,7 +198,7 @@ By inspecting this file I learned that:
 * b. Use ```cut```, ```head```, and ```awk``` to double check that teosinte_genotypes.txt only has the 3 teosinte groups I want, along with all of the other data associated with each of them. 
 
 	``` 
-	$cut -f3 teosinte_genotypes.txt |sort| uniq -c 
+	$ cut -f3 teosinte_genotypes.txt |sort| uniq -c 
 	$ head -n5 teosinte_genotypes.txt
 	$ awk -F "\t" '{print NF; exit}' teosinte_genotypes.txt
 	
@@ -274,64 +274,87 @@ For maize (Group = ZMMIL, ZMMLR, and ZMMMR in the third column of the fang_et _a
 	
 * b. Next, we have to use ```awk``` and ```sort```  to cut and sort each chromosome by increasing position values and with missing data encoded by this symbol: ? using ```sed```: 
 
+	* We are using the ```for``` loop command and ```awk``` to find  *i* in column 2. For every i (which we have indicated as 1-10), it will print our header, sort numerically in column 3, and then use ```sed``` to find and replace any missing data "-" with "?" After this, it will print that output into its own separate text file by the chromosome number. 
+
 	```
-	$ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3n) | sed 's/-/?/g' > chr"$i"_maize_genotypes.txt; done
-	$ head -n2 chr1__maize_genotypes.txt
-	$ tail -n2 chr1__maize_genotypes.txt	
+	$ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3n) | sed 's/-/?/g' > chr"$i"_maize_genotypes.txt ; done
+	$ head -n2 chr1_maize_genotypes.txt
+	$ tail -n2 chr1_maize_genotypes.txt	
 	```
+```	
+	head output:        
+	SNP_ID		Chromosome	Position.       
+	PZB00859.1	1		157104
 	
-*i* is our variable for column 2. For every i (1-10), it will print our header, sort numerically in column 3 (except for the header), and then match any missing data with "?" 
+	tail output:        
+	SNP_ID		Chromosome	Position.       
+	PZA00230.5	1	298412984
+```	
+
 
 **2) 10 files (1 for each chromosome) with SNPs ordered based on decreasing position values and with missing data encoded by this symbol: -**
 
-```
-$ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3nr) | sed 's/?/-/g' > chr"$i"_maize_genotypes_reverse.txt; done
-$ head -n2 chr1__maize_genotypes_reverse.txt
-$ tail -n2 chr1__maize_genotypes_reverse.txt
-```
+* Here, we are running the same for loop and awk command, except we are sorting in reverse numerically ```sort -k3, 3nr``` in column 3 and using ```sed``` to find and replace "?" with "-". 
 
+	```
+	$ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3nr) | sed 's/?/-/g' > chr"$i"_maize_genotypes_reverse.txt; done
+	$ head -n2 chr1_maize_genotypes_reverse.txt
+	$ tail -n2 chr1_maize_genotypes_reverse.txt
+	```
+	```
+	head output:        
+	SNP_ID		Chromosome	Position.       
+	PZA00230.5	1	298412984
+		
+	tail output:        
+	SNP_ID		Chromosome	Position.       
+	PZB00859.1	1		157104
+	```	
+	
 **3) 1 file with all SNPs with unknown positions in the genome (these need not be ordered in any particular way)**
 
-```
-$ awk 'NR==1; $3 ~ /unknown/' maizejoined.txt > maize_unknown_genotypes.txt
-	
-$ cut -f3 maize_unknown_genotypes.txt |sort| uniq -c
-```
+* Here, we are using ```awk``` again to find and match our pattern "unknown" and output it into its own text file. We're using ```cut``` and ```head``` to ensure that it only matched anything "unknown." 
+
+	```
+	$ awk 'NR==1; $3 ~ /unknown/' maizejoined.txt > maize_unknown_genotypes.txt
+	$ cut -f2 maize_unknown_genotypes.txt |sort| uniq -c
+	$ head -n2 maize_unknown_genotypes.txt
+	```
+	output:      
+	 1 Chromosome   
+	  			27 unknown
 
 **4) 1 file with all SNPs with multiple positions in the genome (these need not be ordered in any particular way)**
 
-
-```
-$ awk 'NR==1; $3 ~ /multiple/' maizejoined.txt > maize_multiple_genotypes.txt
-$ cut -f3 maize_multiple_genotypes.txt |sort| uniq -c
-```
+* Here, we are using ```awk``` to find and match our pattern "mulitple" and output it into its own text file. We're using ```cut``` and ```head``` to ensure that it only matched anything "unknown." 
 
 
+	```
+	$ awk 'NR==1; $3 ~ /multiple/' maizejoined.txt > maize_multiple_genotypes.txt
+	$ cut -f3 maize_multiple_genotypes.txt |sort| uniq -c
+	head -n2 maize_multiple_genotypes.txt
+	```
+	output:      
+	 1 Position    
+	  11 multiple
 
 ##Data Processing: Teosinte Data and Analysis for the following tasks
-For teosinte (Group = ZMPBA, ZMPIL, and ZMPJA in the third column of the fang_et_al_genotypes.txt file) we want 20 files in total
+For teosinte (Group = ZMPBA, ZMPIL, and ZMPJA in the third column of the fang_ et_al _genotypes.txt file) we want 20 files in total. 
+
+_Below are the same codes used as above for the maize data:_
 
 **1) 10 files (1 for each chromosome) with SNPs ordered based on increasing position values and with missing data encoded by this symbol: ?**
 
-* a. First, we need to determine how many groups are in each chromosome and how many snps we have that are unknown and multiple positions of the genome: 
 
+```
+$ cut -f2 teosintejoined.txt |sort| uniq -c 
+$ cut -f3 teosintejoined.txt |sort| uniq -c 
 
-	```
-	$ cut -f2 teosintejoined.txt |sort| uniq -c 
-	$ cut -f3 teosintejoined.txt |sort| uniq -c 
-	```
-
-* b. Next, we have to use ```awk``` and ```sort```  to cut and sort each chromosome by increasing position values and with missing data encoded by this symbol: ? using ```sed```: 
-
-	```
-	$ for i in {1..10}; do awk 'NR==1; $2=='$i'' teosintejoined.txt | (head -n1 && tail -n +2 | sort -k3,3n) | sed 's/-/?/g' > chr"$i"_teosinte_genotypes.txt; done
+$ for i in {1..10}; do awk 'NR==1; $2=='$i'' teosintejoined.txt | (head -n1 && tail -n +2 | sort -k3,3n) | sed 's/-/?/g' > chr"$i"_teosinte_genotypes.txt; done
 	
-	$ head -n2 chr1_teosinte_genotypes.txt
-	$ tail -n2 chr1_teosinte_genotypes.txt
-	
-	```
-	
-*i* is our variable for column 2. For every i (1-10), it will print our header, sort numerically in column 3 (except for the header), and then match any missing data with "?" 
+$ head -n2 chr1_teosinte_genotypes.txt
+$ tail -n2 chr1_teosinte_genotypes.txt
+```
 
 **2) 10 files (1 for each chromosome) with SNPs ordered based on decreasing position values and with missing data encoded by this symbol: -**
 
@@ -357,8 +380,8 @@ $ cut -f3 teosinte_mulitple_genotypes.txt|sort| uniq -c
 $ head -n2 teosinte_mulitple_genotypes.txt
 ```
 
-
-**5) Clean filed and organize into their respective folders:**
+##Data clean-up
+**1) Clean filed and organize into their respective folders:**
 
 
 ```
@@ -367,7 +390,7 @@ $ mkdir all_teosinte_genotypes
 $ mkdir intermed_files
 ```
 
-**6) Final step - save, commit, and push files to Git repository:** 
+**2) Final step - save, commit, and push files to Git repository:** 
 
 ```
 $ git add . 
