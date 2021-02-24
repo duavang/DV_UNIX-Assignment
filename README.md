@@ -243,7 +243,7 @@ For maize (Group = ZMMIL, ZMMLR, and ZMMMR in the third column of the fang_et _a
 	$ head -n2 chr1_maize_genotypes.txt
 	$ tail -n2 chr1_maize_genotypes.txt	
 	```
-```	
+	```	
 	head output:        
 	SNP_ID		Chromosome	Position.       
 	PZB00859.1	1		157104
@@ -251,7 +251,7 @@ For maize (Group = ZMMIL, ZMMLR, and ZMMMR in the third column of the fang_et _a
 	tail output:        
 	SNP_ID		Chromosome	Position.       
 	PZA00230.5	1	298412984
-```	
+	```	
 
 
 **2) 10 files (1 for each chromosome) with SNPs ordered based on decreasing position values and with missing data encoded by this symbol: -**
