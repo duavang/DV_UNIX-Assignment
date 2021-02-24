@@ -15,7 +15,6 @@ $ head -n 1 fang_et_al_genotypes.txt
 $ awk -F "\t" '{print NF; exit}' fang_et_al_genotypes.txt
 $ cut -f3 fang_et_al_genotypes.txt
 $ cut -f 3 fang_et_al_genotypes.txt |sort| uniq -c
-
 ```
 
 By inspecting this file I learned that:
@@ -58,8 +57,6 @@ $ ls -lh snp_position.txt
 $ cat snp_position.txt
 $ head snp_position.txt
 $ awk -F "\t" '{print NF; exit}' snp_position.txt
-
-
 ```
 
 By inspecting this file I learned that:
@@ -139,14 +136,12 @@ By inspecting this file I learned that:
 	
 	```
 	$ awk -f transpose.awk maize_genotypes.txt > transposed_maize_genotypes.txt
-	
 	```
 	
 * d. Sort transposed_ maize_genotypes.txt alpha-numerically in column 1 while excluding the header using ```(head -n1```: 
 
 	```
 	$ (head -n1 transposed_maize_genotypes.txt && tail -n +2 transposed_maize_genotypes.txt | sort -f -k1,1) > transposed_maize_genotypes_sorted.txt
-	
 	```	
 	
 * e. To ensure that we still have the header along with the rest of the data, run ```head -n5```: 
@@ -201,7 +196,6 @@ By inspecting this file I learned that:
 	$ cut -f3 teosinte_genotypes.txt |sort| uniq -c 
 	$ head -n5 teosinte_genotypes.txt
 	$ awk -F "\t" '{print NF; exit}' teosinte_genotypes.txt
-	
 	```
 	```
 	output: 	
@@ -216,7 +210,6 @@ By inspecting this file I learned that:
 
 	```
 	  $ awk -f transpose.awk teosinte_genotypes.txt > transposed_teosinte_genotypes.txt
-	
 	```
 	
 * d. Sorting transposed_ teosinte_ genotypes.txt alpha-numerically in column 1 while excluding the header using ```(head -n1```: 
