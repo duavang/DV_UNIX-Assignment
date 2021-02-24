@@ -179,20 +179,14 @@ By inspecting this file I learned that:
     3 columns
 	```
     
-**2) Preparing files that contain 3 teosinte groups = ZMPBA, ZMPIL, and ZMPJA (Using the same commands above):**
+**2) Preparing files that contain 3 teosinte groups = ZMPBA, ZMPIL, and ZMPJA (Using the same commands asz above):**
 
 
 * a. Use ```awk``` to match for ZMPBA, ZMPIL, and ZMPJA and output into file called teosinte_genotypes.txt:
 
 	```
 	$ awk 'NR==1; $3 ~ /ZMPBA|ZMPIL|ZMPJA/' fang_et_al_genotypes.txt > teosinte_genotypes.txt
-	```
-	
-	* ```NR==1``` is used to ensure that the header is retained in the output file. 
 
-* b. Use ```cut```, ```head```, and ```awk``` to double check that teosinte_genotypes.txt only has the 3 teosinte groups I want, along with all of the other data associated with each of them. 
-
-	``` 
 	$ cut -f3 teosinte_genotypes.txt |sort| uniq -c 
 	$ head -n5 teosinte_genotypes.txt
 	$ awk -F "\t" '{print NF; exit}' teosinte_genotypes.txt
@@ -206,36 +200,11 @@ By inspecting this file I learned that:
 	986 columns         
 	```	
 
-* c. Transpose teosinte_genotypes.txt:
-
 	```
-	  $ awk -f transpose.awk teosinte_genotypes.txt > transposed_teosinte_genotypes.txt
-	```
-	
-* d. Sorting transposed_ teosinte_ genotypes.txt alpha-numerically in column 1 while excluding the header using ```(head -n1```: 
-
-	```
+	$ awk -f transpose.awk teosinte_genotypes.txt > transposed_teosinte_genotypes.txt
 	$ (head -n1 transposed_teosinte_genotypes.txt && tail -n +2 transposed_teosinte_genotypes.txt | sort -f -k1,1) > transposed_teosinte_genotypes_sorted.txt
-	```	
-	
-* e. To ensure that we still have the header along with the rest of the data, run ```head -n5```: 
-
-	```
 	$ head -n5 transposed_teosinte_genotypes_sorted.txt
-	```
-
-* f. Joining transposed and sorted teosinte genotype with cut_ snp_sorted.txt at columns 1: 	
-
-	* ```-t $'\t' ``` is inserted to set the delimiter as tabs and not space (which is the default delimiter for ```join```).
-	*  ```-a1``` is to include lines that are unpairable in our cut snp file - meaning our header will also be included in our output.
-
-	```
 	$ join -t $'\t' -a1 -1 1 -2 1 snp_pos_chrom_sorted.txt transposed_teosinte_genotypes_sorted.txt > teosintejoined.txt
-	```
-	
-* g. Checking to make sure our join was successful using ```wc -1```, ```head -n5``` and ```awk```:
-	
-	```
 	$ wc -l  snp_pos_chrom_sorted.txt transposed_teosinte_genotypes_sorted.txt teosintejoined.txt
 	$ head -n 5 teosintejoined.txt
 	$ awk -F "\t" '{print NF; exit}' teosintejoined.txt
