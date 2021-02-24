@@ -179,7 +179,7 @@ By inspecting this file I learned that:
     3 columns
 	```
     
-**2) Preparing files that contain 3 teosinte groups = ZMPBA, ZMPIL, and ZMPJA (Using the same commands asz above):**
+**2) Preparing files that contain 3 teosinte groups = ZMPBA, ZMPIL, and ZMPJA (Using the same commands as above):**
 
 
 * a. Use ```awk``` to match for ZMPBA, ZMPIL, and ZMPJA and output into file called teosinte_genotypes.txt:
@@ -256,7 +256,7 @@ For maize (Group = ZMMIL, ZMMLR, and ZMMMR in the third column of the fang_et _a
 
 **2) 10 files (1 for each chromosome) with SNPs ordered based on decreasing position values and with missing data encoded by this symbol: -**
 
-* Here, we are running the same for loop and awk command, except we are sorting in reverse numerically ```sort -k3, 3nr``` in column 3 and using ```sed``` to find and replace "?" with "-". 
+* Here, we are running the same ```for``` loop and ```awk``` commands, except we are sorting in reverse numerically ```sort -k3, 3nr``` in column 3 and using ```sed``` to find and replace "?" with "-". 
 
 	```
 	$ for i in {1..10}; do awk 'NR==1; $2=='$i'' maizejoined.txt | (head -n1 && tail -n +2 | sort -k3,3nr) | sed 's/?/-/g' > chr"$i"_maize_genotypes_reverse.txt; done
@@ -288,7 +288,7 @@ For maize (Group = ZMMIL, ZMMLR, and ZMMMR in the third column of the fang_et _a
 
 **4) 1 file with all SNPs with multiple positions in the genome (these need not be ordered in any particular way)**
 
-* Here, we are using ```awk``` to find and match our pattern "mulitple" and output it into its own text file. We're using ```cut``` and ```head``` to ensure that it only matched anything "unknown." 
+* Here, we are using ```awk``` to find and match our pattern "mulitple" and output it into its own text file. We're using ```cut``` and ```head``` to ensure that it only matched anything "mulitple." 
 
 
 	```
